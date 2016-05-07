@@ -9,12 +9,11 @@
   <h2>Quiz: el juego de las preguntas</h2>
 
   <p>
-     La respuesta es <%= result %>.
+     La respuesta introducida (<%= answer %>) es <%= result %>.
   </p>
 
-  <p>
-     <a href="/question"> Inténtelo otra vez </a>
-  </p>
+  <p><a href="/question?answer=<%= answer %>"> Inténtelo otra vez </a></p>
+  <p><a href="/">Inicio</a></p>
 
   </body>
 </html>

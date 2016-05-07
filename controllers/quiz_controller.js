@@ -1,11 +1,13 @@
 //Question
 exports.question =function (req,res,next){
-	res.render('quizzes/question', {question:'Capital de Italia'});
+	var answer = req.query.answer || "";
+	res.render('quizzes/question', {question:'Capital de Italia', answer:answer});
 };
 //Answer
 exports.check = function (req, res, next){
 	var result;
-	if (req.query.answer==='Roma') result = 'Correcta';
+	var answer = req.query.answer || "";
+	if (answer==='Roma') result = 'Correcta';
 	else result='Incorrecta';
-	res.render('quizzes/result', {result:result});
+	res.render('quizzes/result', {result:result, answer:answer});
 };
