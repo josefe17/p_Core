@@ -1,13 +1,31 @@
+var models = require ('../models');
+
 //Question
 exports.question =function (req,res,next){
-	var answer = req.query.answer || "";
-	res.render('quizzes/question', {question:'Capital de Italia', answer:answer});
+	models.Quiz.findOne()
+		.then(function(quiz){
+			if(quiz){
+				var answer =req.query.answer || '';
+				res.render('quizzes/question', {question:quiz.question, answer:answer});
+			}
+			else throw new Error('No hay preguntas en la base de datos.');
+		})
+		.catch (function(Error){
+			next(Error);
+		});	
 };
+
 //Answer
-exports.check = function (req, res, next){
-	var result;
-	var answer = req.query.answer || "";
-	if (answer==='Roma') result = 'Correcta';
-	else result='Incorrecta';
-	res.render('quizzes/result', {result:result, answer:answer});
+exports.check = function(req, res, next) {
+	models.Quiz.findOne() 
+		.then(function(quiz) {
+			if (quiz) {
+				var answer = req.query.answer || "";
+				var result = answer === quiz.answer ? 'Correcta' : 'Incorrecta';
+				res.render('quizzes/result', { result: result, answer: answer });
+		    } else throw new Error('No hay preguntas en la base de datos.');
+		 })
+		.catch(function(Error) {
+			next(Error);
+		});
 };
