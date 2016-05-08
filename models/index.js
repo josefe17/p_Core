@@ -1,14 +1,29 @@
 
 var path = require('path');
 
-// Cargar Modelo ORM
+// Cargar ORM
 var Sequelize = require('sequelize');
 
 // Usar BBDD SQLite:
-var sequelize = new Sequelize(null, null, null, 
-                       		  { dialect: "sqlite", 
-                       		    storage: "quiz.sqlite"
-                       		  });
+//    DATABASE_URL = sqlite:///
+//    DATABASE_STORAGE = quiz.sqlite
+// Usar BBDD Postgres:
+ 
+
+var url, storage;
+
+if (!process.env.DATABASE_URL) {
+    url = "sqlite:///";
+    storage = "quiz.sqlite";
+} else {
+    url = process.env.DATABASE_URL;
+    storage = process.env.DATABASE_STORAGE || "";
+}
+
+var sequelize = new Sequelize(url, 
+                { storage: storage,
+                  omitNull: true 
+                      });
 
 // Importar la definicion de la tabla Quiz de quiz.js
 var Quiz = sequelize.import(path.join(__dirname,'quiz'));
@@ -21,9 +36,9 @@ sequelize.sync()
         return Quiz.count()
                 .then(function (c) {
                     if (c === 0) {   // la tabla se inicializa solo si está vacía
-                        return Quiz.create({ question: 'Dimensiones del vector de Poynting',
-          	                                 answer: 'W/m2'
-          	                               })
+                        return Quiz.create({ question: 'Capital de Marruecos',
+                                             answer: 'Rabat'
+                                           })
                                    .then(function() {
                                         console.log('Base de datos inicializada con datos');
                                     });
