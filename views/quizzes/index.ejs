@@ -8,8 +8,12 @@
       <input type="text" name="search" placeholder="Introduzca texto a buscar" />
       <input type="submit" value="Buscar">
     </p>
-  </form>
+  </form> 
+  <a href="/quizzes/new"><button type="button">Crear pregunta</button></a>
 
+<br>
+<br>
+<h1>Listado de preguntas</h1>
 <table>
   <% for (var i in quizzes) { %>        
      <tr>
@@ -20,4 +24,6 @@
   <% } %>
 </table>
 <br>
+
 </p>
+

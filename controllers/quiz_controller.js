@@ -40,6 +40,22 @@ exports.index = function(req, res, next) {
 
 };
 
+// GET /quizzes/new
+exports.new = function(req, res, next){
+	var quiz = models.Quiz.build({question: "", answer: ""});
+	res.render('quizzes/new', {quiz: quiz}); //quiz.question y quiz.answer van vacíos
+};
+
+//POST /quizzes/create
+exports.create = function (req, res, next){
+	var quiz = models.Quiz.build({ question: req.body.quiz.question, answer: req.body.quiz.answer} ); //Req.body.quiz pq es body (parser)
+	quiz.save({fields: ["question", "answer"]})
+	.then(function(quiz){
+		res.redirect('/quizzes')}) //redirigimos a la lista quizzes
+	.catch(function(error){
+		next(error)});  
+};
+
 
 // GET /quizzes/:id
 exports.show = function(req, res, next) {
