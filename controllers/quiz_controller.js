@@ -51,8 +51,10 @@ exports.create = function (req, res, next){
 	var quiz = models.Quiz.build({ question: req.body.quiz.question, answer: req.body.quiz.answer} ); //Req.body.quiz pq es body (parser)
 	quiz.save({fields: ["question", "answer"]})
 	.then(function(quiz){
+		req.flash('success', 'Quiz '+ quiz.question +' creado  con éxito.');
 		res.redirect('/quizzes')}) //redirigimos a la lista quizzes
 	.catch(function(error){
+		req.flash('error', "Error al crear un Quiz: " + error.message);
 		next(error)});  
 };
 
