@@ -17,7 +17,7 @@ exports.load = function(req, res, next, quizId) {
 };
 
 
-// GET /quizzes
+// GET /quizzes Carga lista quizzes
 exports.index = function(req, res, next) {
 	if(req.query.search){
 		models.Quiz.findAll({where: {question: {$like: "%"+req.query.search+"%"}}})
@@ -41,13 +41,13 @@ exports.index = function(req, res, next) {
 
 };
 
-// GET /quizzes/new
+// GET /quizzes/new crea un quiz nuevo -> pide pagina para meter datos
 exports.new = function(req, res, next){
 	var quiz = models.Quiz.build({question: "", answer: ""});
 	res.render('quizzes/new', {quiz: quiz}); //quiz.question y quiz.answer van vacíos
 };
 
-// POST /quizzes/create
+// POST /quizzes/create  guarda los datos en la db
 exports.create = function(req, res, next) {
   var quiz = models.Quiz.build({ question: req.body.quiz.question, 
   	                             answer:   req.body.quiz.answer} );
@@ -76,7 +76,21 @@ exports.create = function(req, res, next) {
 	});  
 };
 
-// GET /quizzes/:id
+// DELETE /quizzes/:id borra quiz
+
+exports.destroy =function(req, res, next){
+	req.quiz.destroy()
+	 .then(function(quiz){
+		req.flash('success', 'Quiz borrado correctamente');
+		res.redirect("/quizzes"); // Redirección a la lista de preguntas
+	})	
+    .catch(function(error) {
+		req.flash('error', 'Error al borrar el quiz: ' + error.message);
+		next(error);
+	});  
+}
+
+// GET /quizzes/:id muestra quiz
 exports.show = function(req, res, next) {
 
 	var answer = req.query.answer || '';
@@ -85,13 +99,13 @@ exports.show = function(req, res, next) {
 								answer: answer});
 };
 
-// GET /quizzes/:id/edit
+// GET /quizzes/:id/edit muesta edición de quiz
 exports.edit=function(req, res, next){
 	var quiz = req.quiz;
 	res.render('quizzes/edit', {quiz: quiz});
 }
 
-//PUT /quizzes/:id
+//PUT /quizzes/:id  guarda quiz editado
 
 exports.update =function(req, res, next){
 	req.quiz.question = req.body.quiz.question;
@@ -117,7 +131,7 @@ exports.update =function(req, res, next){
 }
 
 
-// GET /quizzes/:id/check
+// GET /quizzes/:id/check comprueba respuesta quiz
 exports.check = function(req, res, next) {
 
 	var answer = req.query.answer || "";
