@@ -32,7 +32,11 @@ exports.index = function(req, res, next) {
 	else{
 	models.Quiz.findAll()
 		.then(function(quizzes) {
-			res.render('quizzes/index.ejs', { quizzes: quizzes});
+			if (req.params.format==="json"){ 
+				res.setHeader('Content-Type', 'application/json');
+				res.send(JSON.stringify(quizzes));
+			}
+			else res.render('quizzes/index.ejs', { quizzes: quizzes});
 		})
 		.catch(function(error) {
 			next(error);
@@ -55,11 +59,11 @@ exports.create = function(req, res, next) {
   // guarda en DB los campos pregunta y respuesta de quiz
   quiz.save({fields: ["question", "answer"]})
   	.then(function(quiz) {
-  		console.log(">>>>>>>>>>>>>>>>>>>>>>>AQUI");
+  		//console.log(">>>>>>>>>>>>>>>>>>>>>>>AQUI");
 		req.flash('success', 'Quiz creado con éxito.');
-		console.log(">>>>>>>>>>>>>>>>>>>>>>>AQUI2");
+		
     	res.redirect('/quizzes');  // res.redirect: Redirección HTTP a lista de preguntas
-    	console.log(">>>>>>>>>>>>>>>>>>>>>>>AQUI3");
+    	
     })
     
     .catch(Sequelize.ValidationError, function(error) {
@@ -94,9 +98,11 @@ exports.destroy =function(req, res, next){
 exports.show = function(req, res, next) {
 
 	var answer = req.query.answer || '';
-
-	res.render('quizzes/show', {quiz: req.quiz,
-								answer: answer});
+	if (req.params.format==="json"){ 
+		res.setHeader('Content-Type', 'application/json');
+		res.send(JSON.stringify(req.quiz));
+	}
+	else res.render('quizzes/show', {quiz: req.quiz, answer: answer});
 };
 
 // GET /quizzes/:id/edit muesta edición de quiz
