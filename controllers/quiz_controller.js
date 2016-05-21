@@ -4,7 +4,7 @@ var Sequelize = require('sequelize');
 
 // Autoload el quiz asociado a :quizId
 exports.load = function(req, res, next, quizId) {
-	models.Quiz.findById(quizId)
+	models.Quiz.findById(quizId, { include: [models.Comment]}) //Carga también los comentarios en req.quiz.Comments
   		.then(function(quiz) {
       		if (quiz) {
         		req.quiz = quiz; //Lo mete en req.quiz
@@ -102,7 +102,7 @@ exports.show = function(req, res, next) {
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify(req.quiz));
 	}
-	else res.render('quizzes/show', {quiz: req.quiz, answer: answer});
+	else res.render('quizzes/show', {quiz: req.quiz, answer: answer}); 
 };
 
 // GET /quizzes/:id/edit muesta edición de quiz
