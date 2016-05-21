@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "migrate_local": "./node_modules/.bin/sequelize db:migrate --url sqlite:///c/Users/josefe/Documents/UPM/3º/Segundo\\ semestre/CORE/quiz_jf/p_core/quiz.sqlite"
-    "seed_local": "./node_modules/.bin/sequelize db:seed:all --url sqlite:///c/Users/josefe/Documents/UPM/3º/Segundo\\ semestre/CORE/quiz_jf/p_core/quiz.sqlite"
-    "migrate_heroku": "heroku run ./node_modules/.bin/sequelize db:migrate --url \\DATABASE_URL"
-    "seed_local": "./node_modules/.bin/sequelize db:seed:all --url \\DATABASE_URL"
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "migrate_local": "./node_modules/.bin/sequelize db:migrate --url sqlite://c/Users/josefe/Documents/UPM/3º/Segundo_semestre/CORE/quiz_jf/p_Core/quiz.sqlite",
+    "seed_local": "./node_modules/.bin/sequelize db:seed:all --url sqlite://c/Users/josefe/Documents/UPM/3º/Segundo_semestre/CORE/quiz_jf/p_Core/quiz.sqlite",
+    "migrate_heroku": "heroku run ./node_modules/.bin/sequelize db:migrate --url \\$DATABASE_URL",
+    "seed_heroku": "heroku run ./node_modules/.bin/sequelize db:seed:all --url \\$DATABASE_URL",
+    "reset_heroku": "heroku pg:reset DATABASE"
   },
   "engines": {
     "node": "4.2.x",
