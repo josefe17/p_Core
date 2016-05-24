@@ -40,6 +40,8 @@ var User = sequelize.import(path.join(__dirname,'user'));
 Comment.belongsTo(Quiz); //cada comentario tiene un quiz => añade el campo quizId en la tabla de comentarios
 Quiz.hasMany(Comment); //cada quiz varios comentarios
 
+User.hasMany(Quiz, {foreignKey: 'AuthorId'});
+Quiz.belongsTo(User, {as: 'Author', foreignKey: 'AuthorId'});
 
 exports.Quiz = Quiz; // exportar definición de tabla Quiz
 exports.Comment = Comment; // exportar definición de tabla Comments
