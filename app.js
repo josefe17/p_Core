@@ -13,6 +13,7 @@ var routes = require('./routes/index');
 
 var app = express();
 
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -37,7 +38,27 @@ app.use(function(req, res, next){
   next();
 });
 
+
+app.use(function(req, res, next){
+  if (!res.locals.session.user) next(); //Si no hay nadie logueado
+  else {
+        var timeout = 120000;
+        timeout = 7500; //Debug
+        var prev_time_ms = res.locals.session.user.prev_time || (new Date()).getTime();
+        if (((new Date()).getTime() - prev_time_ms)<timeout){
+          res.locals.session.user.prev_time = (new Date()).getTime(); 
+          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Reset timeout: " + res.locals.session.user);         
+        }
+        else{ 
+          res.locals.session.user=null;
+          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Logging out: " + res.locals.session.user);
+          }
+        next();        
+    }
+});
+
 app.use('/', routes);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
