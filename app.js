@@ -43,16 +43,14 @@ app.use(function(req, res, next){
   if (!res.locals.session.user) next(); //Si no hay nadie logueado
   else {
         var timeout = 120000;
-        timeout = 7500; //Debug
+        //timeout = 5000; //Debug
         var prev_time_ms = res.locals.session.user.prev_time || (new Date()).getTime();
         if (((new Date()).getTime() - prev_time_ms)<timeout){
-          res.locals.session.user.prev_time = (new Date()).getTime(); 
-          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Reset timeout: " + res.locals.session.user);         
+          res.locals.session.user.prev_time = (new Date()).getTime();                    
         }
         else{ 
           res.locals.session.user=null;
-          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Logging out: " + res.locals.session.user);
-          }
+        }
         next();        
     }
 });
