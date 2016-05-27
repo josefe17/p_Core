@@ -13,6 +13,7 @@ var routes = require('./routes/index');
 
 var app = express();
 
+//Correr en Heroku: ejecutar desde CMD windows tras haberse logeado en Heroku el script entre comillas cambiando la //$DATABASE_URL por su valor de .env
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
