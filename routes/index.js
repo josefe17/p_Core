@@ -15,6 +15,7 @@ router.get('/', function(req, res, next) {
 // Autoload de rutas que usen :quizId
 router.param('quizId', quizController.load);  // autoload :quizId
 router.param('userId', userController.load); //Autoload userId
+router.param('commentId', commentController.load);  // autoload :commentId
 
 
 // Definición de rutas de /quizzes
@@ -29,6 +30,8 @@ router.delete('/quizzes/:quizId(\\d+)',    sessionController.loginRequired, quiz
 
 router.get('/quizzes/:quizId(\\d+)/comments/new',  sessionController.loginRequired, commentController.new); //Formulario para crear comentario asociado al quizId
 router.post('/quizzes/:quizId(\\d+)/comments',     sessionController.loginRequired, commentController.create); //post que mete los datos del nuevo comentario en la base de datos
+router.put('/quizzes/:quizId(\\d+)/comments/:commentId(\\d+)/accept', sessionController.loginRequired, commentController.accept); //permite moderar los comentarios
+
 
 router.get('/users',				userController.index); //Muestra todos
 router.get('/users/:userId(\\d+)',	userController.show); //Muestra uno
