@@ -9,7 +9,7 @@
     "migrate_heroku": "heroku run ./node_modules/.bin/sequelize db:migrate --url \\$DATABASE_URL",
     "seed_heroku": "heroku run ./node_modules/.bin/sequelize db:seed:all --url \\$DATABASE_URL",
     "reset_heroku": "heroku pg:reset DATABASE"
-  },
+  },  //Correr en Heroku: ejecutar desde CMD windows tras haberse logeado en Heroku el script entre comillas cambiando la //$DATABASE_URL por su valor de .env
   "engines": {
     "node": "4.2.x",
     "npm": "2.14.x"
