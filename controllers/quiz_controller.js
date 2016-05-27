@@ -16,6 +16,20 @@ exports.load = function(req, res, next, quizId) {
         .catch(function(error) { next(error); });
 };
 
+//Allows to edit a quiz or comment
+exports.ownershipRequired = function(req, res, next){
+
+	var isAdmin = req.session.user.isAdmin; //Cargado en el autoload del mw previo
+	var quizAuthorId = req.quiz.AuthorId;
+	var loggedUserId = req.session.user.id; 
+
+	if (isAdmin || quizAuthorId === loggedUserId) next(); //Todo ok
+	else {
+		console.log("Operación prohibida: el usuario logeado no es administrador ni el autor del quiz");
+		res.send(403);
+	}
+}
+
 
 // GET /quizzes Carga lista quizzes
 exports.index = function(req, res, next) {

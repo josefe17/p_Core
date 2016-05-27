@@ -3,7 +3,7 @@ var userController = require('./user_controller');
 var url=require('url');
 var models = require('../models');
 
-var authenticate =function(login, password){
+var authenticate = function(login, password){
     return models.User.findOne({where: {username:login}})
         .then(function(user){
             if (user && user.verifyPassword(password)) return user;
@@ -25,6 +25,33 @@ exports.new = function(req, res, next) {
     res.render('session/new', {redir: redir}); //Guardo donde redirigir
 };
 
+//El usuario registrado es admin o el propietario de la cuenta
+exports.adminOrMyselfRequired = function(req, res, next){
+
+  var isAdmin = req.session.user.isAdmin; //Cargado en el autoload del mw previo
+  var userId = req.user.id;
+  var loggedUserId = req.session.user.id; 
+
+  if (isAdmin || userId === loggedUserId) next(); //Todo ok
+  else {
+    console.log("Ruta prohibida: no es el usuario logeado ni un administrador.");
+    res.send(403);
+  }
+}
+
+//El usuario registrado es admin y no es el propietario de la cuenta
+exports.adminAndNotMyselfRequired = function(req, res, next){
+
+  var isAdmin = req.session.user.isAdmin; //Cargado en el autoload del mw previo
+  var userId = req.user.id;
+  var loggedUserId = req.session.user.id; 
+
+  if (isAdmin && userId !== loggedUserId) next(); //Todo ok
+  else {
+    console.log("Ruta prohibida: no es el usuario logeado ni un administrador.");
+    res.send(403);
+  }
+}
 
 // POST /session   -- Crear la sesion si usuario se autentica
 exports.create = function(req, res, next) {
@@ -38,7 +65,7 @@ exports.create = function(req, res, next) {
              if (user){
 	        // Crear req.session.user y guardar campos id y username
 	        // La sesión se define por la existencia de: req.session.user
-	        req.session.user = {id:user.id, username:user.username};
+	        req.session.user = {id:user.id, username:user.username, isAdmin:user.isAdmin};
 	        res.redirect(redir); // redirección a redir guardado
             }
             else{

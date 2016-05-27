@@ -24,22 +24,23 @@ router.get('/quizzes/:quizId(\\d+).:format?',       quizController.show); //Mues
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check); //Comprueba uno
 router.get('/quizzes/new',				   sessionController.loginRequired, quizController.new); //Crea uno (manda web de creado)
 router.post('/quizzes',					   sessionController.loginRequired, quizController.create); //Mete los datos del creado en la web
-router.get('/quizzes/:quizId(\\d+)/edit',  sessionController.loginRequired, quizController.edit); //...
-router.put('/quizzes/:quizId(\\d+)', 	   sessionController.loginRequired, quizController.update);
-router.delete('/quizzes/:quizId(\\d+)',    sessionController.loginRequired, quizController.destroy);
+router.get('/quizzes/:quizId(\\d+)/edit',  sessionController.loginRequired, quizController.ownershipRequired, quizController.edit); //...
+router.put('/quizzes/:quizId(\\d+)', 	   sessionController.loginRequired, quizController.ownershipRequired, quizController.update);
+router.delete('/quizzes/:quizId(\\d+)',    sessionController.loginRequired, quizController.ownershipRequired, quizController.destroy);
 
+//Rutas de comentarios
 router.get('/quizzes/:quizId(\\d+)/comments/new',  sessionController.loginRequired, commentController.new); //Formulario para crear comentario asociado al quizId
 router.post('/quizzes/:quizId(\\d+)/comments',     sessionController.loginRequired, commentController.create); //post que mete los datos del nuevo comentario en la base de datos
-router.put('/quizzes/:quizId(\\d+)/comments/:commentId(\\d+)/accept', sessionController.loginRequired, commentController.accept); //permite moderar los comentarios
+router.put('/quizzes/:quizId(\\d+)/comments/:commentId(\\d+)/accept', sessionController.loginRequired, quizController.ownershipRequired, commentController.accept); //permite moderar los comentarios
 
-
+//Rutas de user
 router.get('/users',				userController.index); //Muestra todos
 router.get('/users/:userId(\\d+)',	userController.show); //Muestra uno
 router.get('/users/new',			userController.new); //crea uno (manda la web de crear uno)
 router.post('/users',				userController.create); //Mete los datos del creado en la db
-router.get('/users/:userId(\\d+)/edit', sessionController.loginRequired, 	userController.edit); //Manda la web para editarlo
-router.put('/users/:userId(\\d+)', 		sessionController.loginRequired,	userController.update); //Guarda los datos del editado en la db
-router.delete('/users/:userId(\\d+)', sessionController.loginRequired,		userController.destroy); //Borra el usuario
+router.get('/users/:userId(\\d+)/edit', sessionController.loginRequired, sessionController.adminOrMyselfRequired,	userController.edit); //Manda la web para editarlo
+router.put('/users/:userId(\\d+)', 		sessionController.loginRequired, sessionController.adminOrMyselfRequired,	userController.update); //Guarda los datos del editado en la db
+router.delete('/users/:userId(\\d+)', sessionController.loginRequired,	sessionController.adminAndNotMyselfRequired,	userController.destroy); //Borra el usuario
 
 // Definición de rutas de sesion
 router.get('/session',    sessionController.new);     // formulario login

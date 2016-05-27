@@ -17,7 +17,6 @@ exports.load = function(req, res, next, userId) {
         .catch(function(error) { next(error); });
 };
 
-
 // GET /users
 exports.index = function(req, res, next) {
     models.User.findAll({order: ['username']})
