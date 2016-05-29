@@ -3,7 +3,9 @@
     <p>
       Pregunta: <%= quiz.question %>
     </p>
-
+    <% if (quiz.Attachment) { %>
+          <img src="<%= quiz.Attachment.url %>" width="50px"></a>
+      <% } %>
     <p>
       <input type="text" name="answer" value="<%= answer %>" placeholder="Respuesta" />
       <input type="submit" value="Comprobar">

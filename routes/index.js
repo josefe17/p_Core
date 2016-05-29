@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
+var multer = require ('multer');
+var upload = multer({dest: './uploads'});
+
 var quizController=require('../controllers/quiz_controller');
 var commentController = require('../controllers/comment_controller');
 var userController = require('../controllers/user_controller');
@@ -23,9 +26,9 @@ router.get('/quizzes.:format?',            			quizController.index); //Muesta to
 router.get('/quizzes/:quizId(\\d+).:format?',       quizController.show); //Muestra uno
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check); //Comprueba uno
 router.get('/quizzes/new',				   sessionController.loginRequired, quizController.new); //Crea uno (manda web de creado)
-router.post('/quizzes',					   sessionController.loginRequired, quizController.create); //Mete los datos del creado en la web
+router.post('/quizzes',					   sessionController.loginRequired, upload.single('image'), quizController.create); //Mete los datos del creado en la web
 router.get('/quizzes/:quizId(\\d+)/edit',  sessionController.loginRequired, quizController.ownershipRequired, quizController.edit); //...
-router.put('/quizzes/:quizId(\\d+)', 	   sessionController.loginRequired, quizController.ownershipRequired, quizController.update);
+router.put('/quizzes/:quizId(\\d+)', 	   sessionController.loginRequired, upload.single('image'), quizController.ownershipRequired, quizController.update);
 router.delete('/quizzes/:quizId(\\d+)',    sessionController.loginRequired, quizController.ownershipRequired, quizController.destroy);
 
 //Rutas de comentarios

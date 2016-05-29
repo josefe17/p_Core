@@ -18,6 +18,11 @@
 <table>
   <% for (var i in quizzes) { %>        
      <tr>
+      <% if (quizzes[i].Attachment) { %>
+          <td>
+            <img src="<%= quizzes[i].Attachment.url %>" width="50px"></a>
+          </td>
+        <% } %>
         <td>
            <a href="/quizzes/<%= quizzes[i].id %>"><%= quizzes[i].question %></a>
         </td>
