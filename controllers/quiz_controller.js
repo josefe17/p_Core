@@ -10,7 +10,10 @@ var cloudinary_image_options = { crop: 'limit', width: 200, height: 200, radius:
 
 // Autoload el quiz asociado a :quizId
 exports.load = function(req, res, next, quizId) {
-	models.Quiz.findById(quizId, { include: [models.Comment, models.Attachment]}) //Carga también los comentarios en req.quiz.Comments
+	models.Quiz.findById(quizId, { include: [{model: models.Comment, include: [ 
+                                      {model: models.User, as: 'Author', attributes: ['username']}]}, 
+                                        models.Attachment, 
+                                      {model: models.User, as: 'Author', attributes: ['username']} ] }) //Carga también los comentarios en req.quiz.Comments
   		.then(function(quiz) {
       		if (quiz) {
         		req.quiz = quiz; //Lo mete en req.quiz
@@ -40,7 +43,7 @@ exports.ownershipRequired = function(req, res, next){
 // GET /quizzes Carga lista quizzes
 exports.index = function(req, res, next) {
 	if(req.query.search){
-			models.Quiz.findAll({where: {question: {$like: "%"+req.query.search+"%"}}, include: [models.Attachment]}) //Puede fallar  la closure del include
+			models.Quiz.findAll({where: {question: {$like: "%"+req.query.search+"%"}},  include: [models.Attachment, {model: models.User, as: 'Author', attributes: ['Username']}]}) //Puede fallar  la closure del include
 			.then(function(quizzes) {
 				res.render('quizzes/index.ejs', { quizzes: quizzes});
 			})
@@ -51,7 +54,7 @@ exports.index = function(req, res, next) {
 	}
 	else{
 	//console.log(">>>>>>>>>>>>>>>>>>>>>>>>>> Punto A");
-	models.Quiz.findAll({ include: [models.Attachment ] } )
+	models.Quiz.findAll({ include: [models.Attachment, {model: models.User, as: 'Author', attributes: ['Username']}]})
 		.then(function(quizzes) {
 			if (req.params.format==="json"){ 
 				res.setHeader('Content-Type', 'application/json');
@@ -83,7 +86,7 @@ exports.create = function(req, res, next) {
 
   var quiz = models.Quiz.build({ question: req.body.quiz.question, 
   	                             answer:   req.body.quiz.answer,
-  	                         	 AuthorId: authorId });
+  	                         	   AuthorId: authorId });
 
   // guarda en DB los campos pregunta y respuesta de quiz
   quiz.save({fields: ["question", "answer"]})

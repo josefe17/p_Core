@@ -31,11 +31,14 @@ exports.new = function(req, res, next) {
 
 // POST /quizes/:quizId/comments mete el comentario en la db de comentarios
 exports.create = function(req, res, next) {
+  var authorId = req.session.user && req.session.user.id || 0;
   var comment = models.Comment.build(
       { text:   req.body.comment.text, //mete el text de comment pasado en el body en el text del modelo de comment      
-        QuizId: req.quiz.id //Asocia el quiz metiendo en el campo quizId de la tabla de comments creado por belongsTo el id del quiz
+        QuizId: req.quiz.id, //Asocia el quiz metiendo en el campo quizId de la tabla de comments creado por belongsTo el id del quiz
+        AuthorId: authorId
       });
 
+    
   comment.save()
     .then(function(comment) {
       req.flash('success', 'Comentario creado con éxito.');
