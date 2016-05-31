@@ -89,7 +89,7 @@ exports.create = function(req, res, next) {
   	                         	   AuthorId: authorId });
 
   // guarda en DB los campos pregunta y respuesta de quiz
-  quiz.save({fields: ["question", "answer"]})
+  quiz.save({fields: ["question", "answer", "AuthorId"]})
   	.then(function(quiz) {
   		//console.log(">>>>>>>>>>>>>>>>>>>>>>>AQUI");
 		req.flash('success', 'Quiz creado con éxito.');
